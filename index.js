@@ -1,3 +1,10 @@
+const SUCCESS = "SUCCESS";
+const FAILURE = "FAILURE";
+const WAITING = "WAITING";
+const IDLE    = "IDLE";
+
+// import { setTimeout } from "timers";
+
 function Counter({ count }) {
     return(
         <p className="mb2">
@@ -39,20 +46,69 @@ function countWords(text) {
     return text ? text.match(/\w+/g).length : 0
 }
 
+function makeFakeRequest() {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            if (Math.random() > 0.5) {
+                resolve('Success!')
+            } else {
+                reject('Failure!')
+            }
+        }, 1500);
+    })
+}
+
+function SaveButton({ onClick }) {
+    return (
+        <button className="pv2 ph3" onClick={onClick}>
+            Save
+        </button>
+    )
+}
+
+function AlertBox({ status }) {
+    if (status === FAILURE) {
+        return <div className="mv2">Save failed!</div>
+    } else if (status === SUCCESS) {
+        return <div className="mv2">Save Successful!</div>
+    } else if (status === WAITING) {
+        return <div className="mv2">Saving....</div>
+    } else {
+        return null
+    }
+}
+
+class SaveManager extends React.Component {
+    constructor() {
+        super();
+        this.state = { saveStatus: IDLE }
+        this.save = this.save.bind(this);
+    }
+
+    save(event) {
+        event.preventDefault();
+        this.setState(() => ({ saveStatus: WAITING }))
+        this.props.
+            saveFunction(this.props.data).
+            then(success => this.setState(() => ({ saveStatus: SUCCESS }))).
+            catch(failure => this.setState(() => ({ saveStatus: FAILURE })))
+    }
+
+    render() {
+        return(
+            <div className="flex flex-column mv2">
+                <SaveButton onClick={this.save}/>
+                <AlertBox status={this.state.saveStatus}/>
+            </div>
+        )
+    }
+}
+
 class WordCounter extends React.Component {
     constructor() {
         super();
         this.state = { text: '' }
-        // this.handleTextChange = this.handleTextChange.bind(this);
     }
-
-    // handleTextChange(currentText) {
-    //     this.setState(() => { return { text: currentText }})
-    // }
-
-    // handleTextChange(currentText) {
-    //     this.setState(() => ({ text: currentText }))
-    // }
 
     handleTextChange = (currentText) => {
         this.setState({ text: currentText })
@@ -68,6 +124,7 @@ class WordCounter extends React.Component {
                 <Editor text={text} onTextChange={this.handleTextChange}/>
                 <Counter count={wordCount}/>
                 <ProgressBar completion={progress}/>
+                <SaveManager saveFunction={makeFakeRequest} data={this.state}/>
             </form>
         )
     }
