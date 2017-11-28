@@ -12,5 +12,4 @@ export default function Editor({ text, onTextChange }) {
             </label>
             <textarea value={text} onChange={handleChange} id="editor"/>
         </div>
-    )
-}
+    )}

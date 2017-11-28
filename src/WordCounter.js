@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import Editor from './Editor';
 import Counter from './Counter';
 import ProgressBar from './ProgressBar';
@@ -23,7 +22,7 @@ export default class WordCounter extends React.Component {
         const wordCount = countWords(text);
         const progress = wordCount / targetWordCount;
         return(
-            <form className="measure pa4 sans-serif">
+            <form>
                 <Editor text={text} onTextChange={this.handleTextChange}/>
                 <Counter count={wordCount}/>
                 <ProgressBar completion={progress}/>

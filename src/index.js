@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom'
-import WordCounter from './WordCounter';
+import App from './App';
 
 ReactDOM.render(
-    <WordCounter targetWordCount={10}/>, document.getElementById('app')
+    <App />, document.getElementById('app')
 )
